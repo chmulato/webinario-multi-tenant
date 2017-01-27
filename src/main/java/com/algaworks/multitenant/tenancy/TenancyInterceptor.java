@@ -14,19 +14,20 @@ public class TenancyInterceptor extends HandlerInterceptorAdapter {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)			throws Exception {
 		
-		Map<String, Object> pathVars = (Map<String, Object>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		final String tenantId = "tenantid";
 		
-		if (pathVars.containsKey("tenantid")) {
-			request.setAttribute("TENANT_ID", pathVars.get("tenantid"));
+		Map<String, Object> variables = (Map<String, Object>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+		if (variables.containsKey(tenantId)) {
+			request.setAttribute("TENANT_ID", variables.get(tenantId));
 		}
 		
 		return true;
 	}
 	
 	public static String getTenantId() {
+		
 		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 		
 		if (requestAttributes != null) {
